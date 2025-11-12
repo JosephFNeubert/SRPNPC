@@ -9,6 +9,8 @@ public class StandardHealth : MonoBehaviour, IHealth
 
     private int currentHealth;
 
+    private float delay = 2f;
+
     public event Action<float> OnHPPctChanged = delegate { };
     public event Action OnDied = delegate { };
 
@@ -35,9 +37,33 @@ public class StandardHealth : MonoBehaviour, IHealth
             Die();
     }
 
+    public void TakeBleedDamage(int amount, int time)
+    {
+        if (amount <= 0)
+            throw new ArgumentOutOfRangeException("Invalid Damage amount specified: " + amount);
+
+        StartCoroutine(Bleed(amount, time, delay));
+    }
+
     private void Die()
     {
         OnDied();
         GameObject.Destroy(this.gameObject);
+    }
+
+    IEnumerator Bleed(int amount, int time, float delayTime)
+    {
+        for (int i = 0; i < time; i++)
+        {
+            currentHealth -= amount;
+
+            OnHPPctChanged(CurrentHpPct);
+
+            if (CurrentHpPct <= 0)
+                Die();
+
+            Debug.Log("BLEED DAMAGE");
+            yield return new WaitForSeconds(delayTime);
+        }
     }
 }

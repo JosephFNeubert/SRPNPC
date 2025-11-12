@@ -41,6 +41,21 @@ public class NumberOfHitsHealth : MonoBehaviour, IHealth
         }
     }
 
+    public void TakeBleedDamage(int amount, int time)
+    {
+        if (canTakeDamage)
+        {
+            StartCoroutine(InvunlerabilityTimer());
+
+            hitsRemaining--;
+
+            OnHPPctChanged(CurrentHpPct);
+
+            if (hitsRemaining <= 0)
+                OnDied();
+        }
+    }
+
     private IEnumerator InvunlerabilityTimer()
     {
         canTakeDamage = false;

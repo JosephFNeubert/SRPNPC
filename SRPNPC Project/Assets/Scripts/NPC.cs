@@ -12,6 +12,11 @@ public class NPC : MonoBehaviour
         GetComponent<IHealth>().TakeDamage(amount);
     }
 
+    internal void TakeBleedDamage(int amount, int time)
+    {
+        GetComponent<IHealth>().TakeBleedDamage(amount, time);
+    }
+
     private void Update()
     {
         transform.position += transform.forward * moveSpeed * Time.deltaTime;
@@ -20,6 +25,11 @@ public class NPC : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             TakeDamage(startingHp / 10);
+        }
+
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            TakeBleedDamage(startingHp / 10, 10);
         }
     }
 
